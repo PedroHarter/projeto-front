@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import api from '../src/services/api';
 
+// Componente de Gerenciamento de Serviços - Versão simplificada
 export default function Services() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingService, setEditingService] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  // Estados para gerenciar os dados
+  const [services, setServices] = useState([]); // Lista de serviços
+  const [loading, setLoading] = useState(true); // Se está carregando
+  const [showForm, setShowForm] = useState(false); // Se deve mostrar o formulário
+  const [editingService, setEditingService] = useState(null); // Serviço sendo editado
+  const [message, setMessage] = useState(''); // Mensagem de sucesso/erro
 
+  // Estados do formulário
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -20,59 +23,68 @@ export default function Services() {
     imagem: ''
   });
 
+  // Carrega os serviços quando o componente é montado
   useEffect(() => {
-    fetchServices();
+    loadServices();
   }, []);
 
-  const fetchServices = async () => {
+  // Função para carregar todos os serviços
+  const loadServices = async () => {
     try {
       const response = await api.get('/services');
       setServices(response.data);
     } catch (error) {
-      showAlert('Erro ao carregar serviços', 'danger');
+      setMessage('Erro ao carregar serviços');
     } finally {
       setLoading(false);
     }
   };
 
-  const showAlert = (message, type) => {
-    setAlert({ show: true, message, type });
-    setTimeout(() => setAlert({ show: false, message: '', type: '' }), 3000);
+  // Função para mostrar mensagem temporária
+  const showMessage = (text) => {
+    setMessage(text);
+    setTimeout(() => setMessage(''), 3000);
   };
 
-  const handleSubmit = async (e) => {
+  // Função para salvar serviço (criar ou editar)
+  const saveService = async (e) => {
     e.preventDefault();
     
     try {
+      // Prepara os dados do serviço
       const serviceData = {
         ...formData,
-        price: parseFloat(formData.price),
+        price: parseFloat(formData.price), // Converte para número
         dataCriacao: editingService ? editingService.dataCriacao : new Date().toISOString().split('T')[0]
       };
 
       if (editingService) {
+        // Se está editando, atualiza o serviço existente
         await api.put(`/services/${editingService.id}`, serviceData);
-        showAlert('Serviço atualizado com sucesso!', 'success');
+        showMessage('Serviço atualizado com sucesso!');
       } else {
+        // Se é novo, cria um novo serviço
         await api.post('/services', serviceData);
-        showAlert('Serviço criado com sucesso!', 'success');
+        showMessage('Serviço criado com sucesso!');
       }
       
-      setShowModal(false);
+      // Fecha o formulário e recarrega a lista
+      setShowForm(false);
       setEditingService(null);
-      resetForm();
-      fetchServices();
+      clearForm();
+      loadServices();
     } catch (error) {
-      showAlert('Erro ao salvar serviço', 'danger');
+      showMessage('Erro ao salvar serviço');
     }
   };
 
-  const handleEdit = (service) => {
+  // Função para editar um serviço
+  const editService = (service) => {
     setEditingService(service);
     setFormData({
       title: service.title,
       description: service.description,
-      price: service.price.toString(),
+      price: service.price.toString(), // Converte para string para o input
       duration: service.duration,
       category: service.category,
       status: service.status,
@@ -80,22 +92,24 @@ export default function Services() {
       localizacao: service.localizacao,
       imagem: service.imagem
     });
-    setShowModal(true);
+    setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
+  // Função para excluir um serviço
+  const deleteService = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este serviço?')) {
       try {
         await api.delete(`/services/${id}`);
-        showAlert('Serviço excluído com sucesso!', 'success');
-        fetchServices();
+        showMessage('Serviço excluído com sucesso!');
+        loadServices();
       } catch (error) {
-        showAlert('Erro ao excluir serviço', 'danger');
+        showMessage('Erro ao excluir serviço');
       }
     }
   };
 
-  const resetForm = () => {
+  // Função para limpar o formulário
+  const clearForm = () => {
     setFormData({
       title: '',
       description: '',
@@ -109,12 +123,14 @@ export default function Services() {
     });
   };
 
-  const openNewServiceModal = () => {
+  // Função para abrir formulário de novo serviço
+  const openNewServiceForm = () => {
     setEditingService(null);
-    resetForm();
-    setShowModal(true);
+    clearForm();
+    setShowForm(true);
   };
 
+  // Função para formatar preço em reais
   const formatPrice = (price) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -122,11 +138,12 @@ export default function Services() {
     }).format(price);
   };
 
+  // Mostra tela de carregamento
   if (loading) {
     return (
       <div className="container">
         <div className="card">
-          <h2>Carregando...</h2>
+          <h2>Carregando serviços...</h2>
         </div>
       </div>
     );
@@ -135,19 +152,22 @@ export default function Services() {
   return (
     <div className="container">
       <div className="card">
+        {/* Cabeçalho da página */}
         <div className="card-header">
-          <h1 className="card-title">Gerenciar Serviços</h1>
-          <button onClick={openNewServiceModal} className="btn btn-success">
-            + Novo Serviço
+          <h1 className="card-title">🛠️ Gerenciar Serviços</h1>
+          <button onClick={openNewServiceForm} className="btn btn-success">
+            ➕ Novo Serviço
           </button>
         </div>
 
-        {alert.show && (
-          <div className={`alert alert-${alert.type}`}>
-            {alert.message}
+        {/* Mensagem de sucesso/erro */}
+        {message && (
+          <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
+            {message}
           </div>
         )}
 
+        {/* Tabela de serviços */}
         <div className="table-responsive">
           <table className="table">
             <thead>
@@ -178,17 +198,17 @@ export default function Services() {
                   </td>
                   <td>
                     <button 
-                      onClick={() => handleEdit(service)} 
+                      onClick={() => editService(service)} 
                       className="btn btn-warning btn-sm"
                       style={{ marginRight: '5px' }}
                     >
-                      Editar
+                      ✏️ Editar
                     </button>
                     <button 
-                      onClick={() => handleDelete(service.id)} 
+                      onClick={() => deleteService(service.id)} 
                       className="btn btn-danger btn-sm"
                     >
-                      Excluir
+                      🗑️ Excluir
                     </button>
                   </td>
                 </tr>
@@ -198,23 +218,24 @@ export default function Services() {
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
+      {/* Modal/Formulário */}
+      {showForm && (
         <div className="modal">
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title">
-                {editingService ? 'Editar Serviço' : 'Novo Serviço'}
+                {editingService ? '✏️ Editar Serviço' : '➕ Novo Serviço'}
               </h2>
               <button 
                 className="close" 
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowForm(false)}
               >
                 &times;
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={saveService}>
+              {/* Campo Título */}
               <div className="form-group">
                 <label>Título *</label>
                 <input
@@ -226,6 +247,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Descrição */}
               <div className="form-group">
                 <label>Descrição *</label>
                 <textarea
@@ -237,6 +259,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Preço */}
               <div className="form-group">
                 <label>Preço *</label>
                 <input
@@ -249,6 +272,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Duração */}
               <div className="form-group">
                 <label>Duração *</label>
                 <input
@@ -261,6 +285,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Categoria */}
               <div className="form-group">
                 <label>Categoria *</label>
                 <input
@@ -272,6 +297,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Status */}
               <div className="form-group">
                 <label>Status</label>
                 <select
@@ -284,6 +310,7 @@ export default function Services() {
                 </select>
               </div>
 
+              {/* Campo Profissional */}
               <div className="form-group">
                 <label>Profissional</label>
                 <input
@@ -294,6 +321,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo Localização */}
               <div className="form-group">
                 <label>Localização</label>
                 <input
@@ -304,6 +332,7 @@ export default function Services() {
                 />
               </div>
 
+              {/* Campo URL da Imagem */}
               <div className="form-group">
                 <label>URL da Imagem</label>
                 <input
@@ -315,16 +344,17 @@ export default function Services() {
                 />
               </div>
 
+              {/* Botões do formulário */}
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                 <button 
                   type="button" 
                   className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowForm(false)}
                 >
-                  Cancelar
+                  ❌ Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingService ? 'Atualizar' : 'Criar'}
+                  {editingService ? '💾 Atualizar' : '➕ Criar'}
                 </button>
               </div>
             </form>

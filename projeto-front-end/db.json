@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Administrador",
       "email": "admin@exemplo.com",
       "password": "admin123",
@@ -14,7 +14,7 @@
       "dataCadastro": "2024-01-01"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "João Silva",
       "email": "joao@exemplo.com",
       "password": "123456",
@@ -29,10 +29,10 @@
   ],
   "services": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Corte de Cabelo Masculino",
       "description": "Corte masculino personalizado com lavagem e finalização",
-      "price": 50.00,
+      "price": 50,
       "duration": "30min",
       "category": "Beleza",
       "status": "ativo",
@@ -42,10 +42,10 @@
       "imagem": "https://via.placeholder.com/300x200"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Manicure Completa",
       "description": "Cutilagem, esmaltação e decoração das unhas",
-      "price": 35.00,
+      "price": 35,
       "duration": "45min",
       "category": "Beleza",
       "status": "ativo",

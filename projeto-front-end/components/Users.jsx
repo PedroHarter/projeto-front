@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../src/services/api';
 
+// Componente de Gerenciamento de Usuários - Versão simplificada
 export default function Users() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  // Estados para gerenciar os dados
+  const [users, setUsers] = useState([]); // Lista de usuários
+  const [loading, setLoading] = useState(true); // Se está carregando
+  const [showForm, setShowForm] = useState(false); // Se deve mostrar o formulário
+  const [editingUser, setEditingUser] = useState(null); // Usuário sendo editado
+  const [message, setMessage] = useState(''); // Mensagem de sucesso/erro
 
+  // Estados do formulário
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,48 +23,56 @@ export default function Users() {
     cep: ''
   });
 
+  // Carrega os usuários quando o componente é montado
   useEffect(() => {
-    fetchUsers();
+    loadUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  // Função para carregar todos os usuários
+  const loadUsers = async () => {
     try {
       const response = await api.get('/users');
       setUsers(response.data);
     } catch (error) {
-      showAlert('Erro ao carregar usuários', 'danger');
+      setMessage('Erro ao carregar usuários');
     } finally {
       setLoading(false);
     }
   };
 
-  const showAlert = (message, type) => {
-    setAlert({ show: true, message, type });
-    setTimeout(() => setAlert({ show: false, message: '', type: '' }), 3000);
+  // Função para mostrar mensagem temporária
+  const showMessage = (text) => {
+    setMessage(text);
+    setTimeout(() => setMessage(''), 3000);
   };
 
-  const handleSubmit = async (e) => {
+  // Função para salvar usuário (criar ou editar)
+  const saveUser = async (e) => {
     e.preventDefault();
     
     try {
       if (editingUser) {
+        // Se está editando, atualiza o usuário existente
         await api.put(`/users/${editingUser.id}`, formData);
-        showAlert('Usuário atualizado com sucesso!', 'success');
+        showMessage('Usuário atualizado com sucesso!');
       } else {
+        // Se é novo, cria um novo usuário
         await api.post('/users', formData);
-        showAlert('Usuário criado com sucesso!', 'success');
+        showMessage('Usuário criado com sucesso!');
       }
       
-      setShowModal(false);
+      // Fecha o formulário e recarrega a lista
+      setShowForm(false);
       setEditingUser(null);
-      resetForm();
-      fetchUsers();
+      clearForm();
+      loadUsers();
     } catch (error) {
-      showAlert('Erro ao salvar usuário', 'danger');
+      showMessage('Erro ao salvar usuário');
     }
   };
 
-  const handleEdit = (user) => {
+  // Função para editar um usuário
+  const editUser = (user) => {
     setEditingUser(user);
     setFormData({
       name: user.name,
@@ -75,22 +85,24 @@ export default function Users() {
       estado: user.estado,
       cep: user.cep
     });
-    setShowModal(true);
+    setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
+  // Função para excluir um usuário
+  const deleteUser = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este usuário?')) {
       try {
         await api.delete(`/users/${id}`);
-        showAlert('Usuário excluído com sucesso!', 'success');
-        fetchUsers();
+        showMessage('Usuário excluído com sucesso!');
+        loadUsers();
       } catch (error) {
-        showAlert('Erro ao excluir usuário', 'danger');
+        showMessage('Erro ao excluir usuário');
       }
     }
   };
 
-  const resetForm = () => {
+  // Função para limpar o formulário
+  const clearForm = () => {
     setFormData({
       name: '',
       email: '',
@@ -104,17 +116,19 @@ export default function Users() {
     });
   };
 
-  const openNewUserModal = () => {
+  // Função para abrir formulário de novo usuário
+  const openNewUserForm = () => {
     setEditingUser(null);
-    resetForm();
-    setShowModal(true);
+    clearForm();
+    setShowForm(true);
   };
 
+  // Mostra tela de carregamento
   if (loading) {
     return (
       <div className="container">
         <div className="card">
-          <h2>Carregando...</h2>
+          <h2>Carregando usuários...</h2>
         </div>
       </div>
     );
@@ -123,19 +137,22 @@ export default function Users() {
   return (
     <div className="container">
       <div className="card">
+        {/* Cabeçalho da página */}
         <div className="card-header">
-          <h1 className="card-title">Gerenciar Usuários</h1>
-          <button onClick={openNewUserModal} className="btn btn-success">
-            + Novo Usuário
+          <h1 className="card-title">👥 Gerenciar Usuários</h1>
+          <button onClick={openNewUserForm} className="btn btn-success">
+            ➕ Novo Usuário
           </button>
         </div>
 
-        {alert.show && (
-          <div className={`alert alert-${alert.type}`}>
-            {alert.message}
+        {/* Mensagem de sucesso/erro */}
+        {message && (
+          <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
+            {message}
           </div>
         )}
 
+        {/* Tabela de usuários */}
         <div className="table-responsive">
           <table className="table">
             <thead>
@@ -164,17 +181,17 @@ export default function Users() {
                   </td>
                   <td>
                     <button 
-                      onClick={() => handleEdit(user)} 
+                      onClick={() => editUser(user)} 
                       className="btn btn-warning btn-sm"
                       style={{ marginRight: '5px' }}
                     >
-                      Editar
+                      ✏️ Editar
                     </button>
                     <button 
-                      onClick={() => handleDelete(user.id)} 
+                      onClick={() => deleteUser(user.id)} 
                       className="btn btn-danger btn-sm"
                     >
-                      Excluir
+                      🗑️ Excluir
                     </button>
                   </td>
                 </tr>
@@ -184,23 +201,24 @@ export default function Users() {
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
+      {/* Modal/Formulário */}
+      {showForm && (
         <div className="modal">
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title">
-                {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
+                {editingUser ? '✏️ Editar Usuário' : '➕ Novo Usuário'}
               </h2>
               <button 
                 className="close" 
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowForm(false)}
               >
                 &times;
               </button>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={saveUser}>
+              {/* Campo Nome */}
               <div className="form-group">
                 <label>Nome *</label>
                 <input
@@ -212,6 +230,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo E-mail */}
               <div className="form-group">
                 <label>E-mail *</label>
                 <input
@@ -223,6 +242,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo Senha */}
               <div className="form-group">
                 <label>Senha *</label>
                 <input
@@ -234,6 +254,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo Função */}
               <div className="form-group">
                 <label>Função</label>
                 <select
@@ -246,6 +267,7 @@ export default function Users() {
                 </select>
               </div>
 
+              {/* Campo Telefone */}
               <div className="form-group">
                 <label>Telefone</label>
                 <input
@@ -256,6 +278,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo Endereço */}
               <div className="form-group">
                 <label>Endereço</label>
                 <input
@@ -266,6 +289,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo Cidade */}
               <div className="form-group">
                 <label>Cidade</label>
                 <input
@@ -276,6 +300,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo Estado */}
               <div className="form-group">
                 <label>Estado</label>
                 <input
@@ -286,6 +311,7 @@ export default function Users() {
                 />
               </div>
 
+              {/* Campo CEP */}
               <div className="form-group">
                 <label>CEP</label>
                 <input
@@ -296,16 +322,17 @@ export default function Users() {
                 />
               </div>
 
+              {/* Botões do formulário */}
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                 <button 
                   type="button" 
                   className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowForm(false)}
                 >
-                  Cancelar
+                  ❌ Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingUser ? 'Atualizar' : 'Criar'}
+                  {editingUser ? '💾 Atualizar' : '➕ Criar'}
                 </button>
               </div>
             </form>

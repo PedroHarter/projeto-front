@@ -1,23 +1,36 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+// Componente de Navegação - Versão simplificada
 export default function Navbar() {
+  // Hook para saber qual página está ativa
   const location = useLocation();
+  
+  // Hook para navegação
   const navigate = useNavigate();
+  
+  // Pega os dados do usuário logado do localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+  // Função para fazer logout
   const handleLogout = () => {
+    // Remove os dados do usuário da memória
     localStorage.removeItem('user');
+    
+    // Volta para a página de login
     navigate('/');
   };
 
   return (
     <nav className="navbar">
       <div className="container navbar-container">
+        {/* Logo/Nome do sistema */}
         <Link to="/dashboard" className="navbar-brand">
           Sistema de Gestão
         </Link>
         
+        {/* Menu de navegação */}
         <ul className="navbar-nav">
+          {/* Link para Dashboard */}
           <li>
             <Link 
               to="/dashboard" 
@@ -26,6 +39,8 @@ export default function Navbar() {
               Dashboard
             </Link>
           </li>
+          
+          {/* Link para Serviços */}
           <li>
             <Link 
               to="/services" 
@@ -34,6 +49,8 @@ export default function Navbar() {
               Serviços
             </Link>
           </li>
+          
+          {/* Link para Usuários */}
           <li>
             <Link 
               to="/users" 
@@ -42,11 +59,15 @@ export default function Navbar() {
               Usuários
             </Link>
           </li>
+          
+          {/* Nome do usuário logado */}
           <li>
             <span style={{ color: '#bdc3c7', padding: '8px 16px' }}>
               Olá, {user.name}
             </span>
           </li>
+          
+          {/* Botão de logout */}
           <li>
             <button 
               onClick={handleLogout}
