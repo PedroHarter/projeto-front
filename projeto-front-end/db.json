@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Administrador",
+      "email": "admin@exemplo.com",
+      "password": "admin123",
+      "role": "admin",
+      "telefone": "(11) 99999-9999",
+      "endereco": "Rua das Flores, 123",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01234-567",
+      "dataCadastro": "2024-01-01"
+    },
+    {
+      "id": 2,
+      "name": "João Silva",
+      "email": "joao@exemplo.com",
+      "password": "123456",
+      "role": "user",
+      "telefone": "(11) 88888-8888",
+      "endereco": "Av. Paulista, 456",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01310-100",
+      "dataCadastro": "2024-01-15"
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "title": "Corte de Cabelo Masculino",
+      "description": "Corte masculino personalizado com lavagem e finalização",
+      "price": 50.00,
+      "duration": "30min",
+      "category": "Beleza",
+      "status": "ativo",
+      "profissional": "Carlos Santos",
+      "localizacao": "Salão Central",
+      "dataCriacao": "2024-01-01",
+      "imagem": "https://via.placeholder.com/300x200"
+    },
+    {
+      "id": 2,
+      "title": "Manicure Completa",
+      "description": "Cutilagem, esmaltação e decoração das unhas",
+      "price": 35.00,
+      "duration": "45min",
+      "category": "Beleza",
+      "status": "ativo",
+      "profissional": "Maria Oliveira",
+      "localizacao": "Salão Central",
+      "dataCriacao": "2024-01-05",
+      "imagem": "https://via.placeholder.com/300x200"
+    }
+  ]
+}
