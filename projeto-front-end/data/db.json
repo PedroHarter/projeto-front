@@ -1,0 +1,107 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Administrador",
+      "email": "admin@exemplo.com",
+      "password": "admin123",
+      "role": "admin",
+      "telefone": "(11) 99999-9999",
+      "cidade": "São Paulo",
+      "dataCadastro": "2024-01-01"
+    },
+    {
+      "name": "Wilian Vieira ",
+      "email": "wilian@exemplo.com",
+      "password": "12345",
+      "role": "user",
+      "telefone": "(48) 88888-8888",
+      "cidade": "Criciúma",
+      "id": "2"
+    },
+    {
+      "name": "Pedro Henrique",
+      "email": "pedro@exemplo.com",
+      "password": "123456",
+      "role": "user",
+      "telefone": "(48) 97777-7777",
+      "cidade": "Criciúma",
+      "id": "3"
+    },
+    {
+      "name": "Gabriel",
+      "email": "gabriel@exemplo.com",
+      "password": "123456",
+      "role": "user",
+      "telefone": "(48) 96666-6666",
+      "cidade": "Criciúma",
+      "id": "4"
+    },
+    {
+      "name": "Alexandre",
+      "email": "alexandre@exemplo.com",
+      "password": "123456",
+      "role": "user",
+      "telefone": "(48) 95555-5555",
+      "cidade": "Criciúma",
+      "id": "5"
+    }
+  ],
+  "services": [
+    {
+      "id": "1",
+      "title": "Corte de Cabelo Masculino",
+      "description": "Corte masculino personalizado com lavagem e finalização",
+      "price": 50,
+      "duration": "30min",
+      "category": "Beleza",
+      "status": "ativo",
+      "profissional": "Carlos Santos",
+      "dataCriacao": "2024-01-01"
+    },
+    {
+      "id": "2",
+      "title": "Manicure Completa",
+      "description": "Cutilagem, esmaltação e decoração das unhas",
+      "price": 35,
+      "duration": "45min",
+      "category": "Beleza",
+      "status": "ativo",
+      "profissional": "Maria Oliveira",
+      "dataCriacao": "2024-01-05"
+    },
+    {
+      "id": "3",
+      "title": "Depilação a Cera",
+      "description": "Depilação completa com cera quente ou fria",
+      "price": 60,
+      "duration": "40min",
+      "category": "Estética",
+      "status": "ativo",
+      "profissional": "Juliana Alves",
+      "dataCriacao": "2024-01-10"
+    },
+    {
+      "id": "4",
+      "title": "Massagem Relaxante",
+      "description": "Sessão de massagem relaxante corporal",
+      "price": 80,
+      "duration": "60min",
+      "category": "Bem-estar",
+      "status": "ativo",
+      "profissional": "Roberto Lima",
+      "dataCriacao": "2024-01-20"
+    },
+    {
+      "id": "5",
+      "title": "Design de Sobrancelhas",
+      "description": "Design e correção de sobrancelhas com pinça e henna",
+      "price": 45,
+      "duration": "35min",
+      "category": "Beleza",
+      "status": "ativo",
+      "profissional": "Patrícia Souza",
+      "dataCriacao": "2024-01-25"
+    }
+  ]
+}

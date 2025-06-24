@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import api from '../src/services/api';
+import api from '../services/api';
+import AddUsers from '../components/AddUsers';
+import EditUsers from '../components/EditUsers';
 
 // Componente de Gerenciamento de Usuários - Versão simplificada
 export default function Users() {
@@ -17,10 +19,7 @@ export default function Users() {
     password: '',
     role: 'user',
     telefone: '',
-    endereco: '',
-    cidade: '',
-    estado: '',
-    cep: ''
+    cidade: ''
   });
 
   // Carrega os usuários quando o componente é montado
@@ -57,7 +56,8 @@ export default function Users() {
         showMessage('Usuário atualizado com sucesso!');
       } else {
         // Se é novo, cria um novo usuário
-        await api.post('/users', formData);
+        const { id, ...userData } = formData;
+        await api.post('/users', userData);
         showMessage('Usuário criado com sucesso!');
       }
       
@@ -80,10 +80,8 @@ export default function Users() {
       password: user.password,
       role: user.role,
       telefone: user.telefone,
-      endereco: user.endereco,
-      cidade: user.cidade,
-      estado: user.estado,
-      cep: user.cep
+      cidade: user.cidade
+
     });
     setShowForm(true);
   };
@@ -109,10 +107,7 @@ export default function Users() {
       password: '',
       role: 'user',
       telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cep: ''
+      cidade: ''
     });
   };
 
@@ -150,6 +145,25 @@ export default function Users() {
           <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
             {message}
           </div>
+        )}
+
+        {/* Formulário de Usuário */}
+        {showForm && (
+          editingUser ? (
+            <EditUsers
+              formData={formData}
+              onChange={setFormData}
+              onSubmit={saveUser}
+              onCancel={() => setShowForm(false)}
+            />
+          ) : (
+            <AddUsers
+              formData={formData}
+              onChange={setFormData}
+              onSubmit={saveUser}
+              onCancel={() => setShowForm(false)}
+            />
+          )
         )}
 
         {/* Tabela de usuários */}
@@ -200,145 +214,6 @@ export default function Users() {
           </table>
         </div>
       </div>
-
-      {/* Modal/Formulário */}
-      {showForm && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">
-                {editingUser ? '✏️ Editar Usuário' : '➕ Novo Usuário'}
-              </h2>
-              <button 
-                className="close" 
-                onClick={() => setShowForm(false)}
-              >
-                &times;
-              </button>
-            </div>
-
-            <form onSubmit={saveUser}>
-              {/* Campo Nome */}
-              <div className="form-group">
-                <label>Nome *</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo E-mail */}
-              <div className="form-group">
-                <label>E-mail *</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo Senha */}
-              <div className="form-group">
-                <label>Senha *</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo Função */}
-              <div className="form-group">
-                <label>Função</label>
-                <select
-                  className="form-control"
-                  value={formData.role}
-                  onChange={(e) => setFormData({...formData, role: e.target.value})}
-                >
-                  <option value="user">Usuário</option>
-                  <option value="admin">Administrador</option>
-                </select>
-              </div>
-
-              {/* Campo Telefone */}
-              <div className="form-group">
-                <label>Telefone</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.telefone}
-                  onChange={(e) => setFormData({...formData, telefone: e.target.value})}
-                />
-              </div>
-
-              {/* Campo Endereço */}
-              <div className="form-group">
-                <label>Endereço</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.endereco}
-                  onChange={(e) => setFormData({...formData, endereco: e.target.value})}
-                />
-              </div>
-
-              {/* Campo Cidade */}
-              <div className="form-group">
-                <label>Cidade</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.cidade}
-                  onChange={(e) => setFormData({...formData, cidade: e.target.value})}
-                />
-              </div>
-
-              {/* Campo Estado */}
-              <div className="form-group">
-                <label>Estado</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.estado}
-                  onChange={(e) => setFormData({...formData, estado: e.target.value})}
-                />
-              </div>
-
-              {/* Campo CEP */}
-              <div className="form-group">
-                <label>CEP</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.cep}
-                  onChange={(e) => setFormData({...formData, cep: e.target.value})}
-                />
-              </div>
-
-              {/* Botões do formulário */}
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary"
-                  onClick={() => setShowForm(false)}
-                >
-                  ❌ Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingUser ? '💾 Atualizar' : '➕ Criar'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 } 

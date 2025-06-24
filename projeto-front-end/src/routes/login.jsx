@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../src/services/api';
+import api from '../services/api';
 
 // Componente de Login - Versão simplificada
 export default function Login() {
@@ -84,9 +84,8 @@ export default function Login() {
         
         {/* Credenciais de teste para facilitar */}
         <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
-          <p><strong>Credenciais de teste:</strong></p>
+          <p><strong>Teste:</strong></p>
           <p>Admin: admin@exemplo.com / admin123</p>
-          <p>Usuário: joao@exemplo.com / 123456</p>
         </div>
       </form>
     </div>

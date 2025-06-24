@@ -131,6 +131,9 @@ body {
   text-align: center;
   padding: 20px 0;
   margin-top: auto;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Card Styles */

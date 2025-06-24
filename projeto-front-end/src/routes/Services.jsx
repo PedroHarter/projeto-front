@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import api from '../src/services/api';
+import api from '../services/api';
+import AddService from '../components/addService';
+import EditService from '../components/EditService';
 
 // Componente de Gerenciamento de Serviços - Versão simplificada
 export default function Services() {
@@ -18,9 +20,7 @@ export default function Services() {
     duration: '',
     category: '',
     status: 'ativo',
-    profissional: '',
-    localizacao: '',
-    imagem: ''
+    profissional: ''
   });
 
   // Carrega os serviços quando o componente é montado
@@ -89,8 +89,6 @@ export default function Services() {
       category: service.category,
       status: service.status,
       profissional: service.profissional,
-      localizacao: service.localizacao,
-      imagem: service.imagem
     });
     setShowForm(true);
   };
@@ -118,8 +116,6 @@ export default function Services() {
       category: '',
       status: 'ativo',
       profissional: '',
-      localizacao: '',
-      imagem: ''
     });
   };
 
@@ -165,6 +161,25 @@ export default function Services() {
           <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
             {message}
           </div>
+        )}
+
+        {/* Formulário de Serviço */}
+        {showForm && (
+          editingService ? (
+            <EditService
+              formData={formData}
+              onChange={setFormData}
+              onSubmit={saveService}
+              onCancel={() => setShowForm(false)}
+            />
+          ) : (
+            <AddService
+              formData={formData}
+              onChange={setFormData}
+              onSubmit={saveService}
+              onCancel={() => setShowForm(false)}
+            />
+          )
         )}
 
         {/* Tabela de serviços */}
@@ -217,150 +232,6 @@ export default function Services() {
           </table>
         </div>
       </div>
-
-      {/* Modal/Formulário */}
-      {showForm && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">
-                {editingService ? '✏️ Editar Serviço' : '➕ Novo Serviço'}
-              </h2>
-              <button 
-                className="close" 
-                onClick={() => setShowForm(false)}
-              >
-                &times;
-              </button>
-            </div>
-
-            <form onSubmit={saveService}>
-              {/* Campo Título */}
-              <div className="form-group">
-                <label>Título *</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo Descrição */}
-              <div className="form-group">
-                <label>Descrição *</label>
-                <textarea
-                  className="form-control"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows="3"
-                  required
-                />
-              </div>
-
-              {/* Campo Preço */}
-              <div className="form-group">
-                <label>Preço *</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  className="form-control"
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo Duração */}
-              <div className="form-group">
-                <label>Duração *</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.duration}
-                  onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                  placeholder="ex: 30min, 1h"
-                  required
-                />
-              </div>
-
-              {/* Campo Categoria */}
-              <div className="form-group">
-                <label>Categoria *</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  required
-                />
-              </div>
-
-              {/* Campo Status */}
-              <div className="form-group">
-                <label>Status</label>
-                <select
-                  className="form-control"
-                  value={formData.status}
-                  onChange={(e) => setFormData({...formData, status: e.target.value})}
-                >
-                  <option value="ativo">Ativo</option>
-                  <option value="inativo">Inativo</option>
-                </select>
-              </div>
-
-              {/* Campo Profissional */}
-              <div className="form-group">
-                <label>Profissional</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.profissional}
-                  onChange={(e) => setFormData({...formData, profissional: e.target.value})}
-                />
-              </div>
-
-              {/* Campo Localização */}
-              <div className="form-group">
-                <label>Localização</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={formData.localizacao}
-                  onChange={(e) => setFormData({...formData, localizacao: e.target.value})}
-                />
-              </div>
-
-              {/* Campo URL da Imagem */}
-              <div className="form-group">
-                <label>URL da Imagem</label>
-                <input
-                  type="url"
-                  className="form-control"
-                  value={formData.imagem}
-                  onChange={(e) => setFormData({...formData, imagem: e.target.value})}
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
-              </div>
-
-              {/* Botões do formulário */}
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary"
-                  onClick={() => setShowForm(false)}
-                >
-                  ❌ Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingService ? '💾 Atualizar' : '➕ Criar'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 } 
