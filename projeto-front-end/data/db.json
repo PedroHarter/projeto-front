@@ -1,14 +1,13 @@
 {
   "users": [
     {
-      "id": "1",
       "name": "Administrador",
       "email": "admin@exemplo.com",
       "password": "admin123",
       "role": "admin",
-      "telefone": "(11) 99999-9999",
-      "cidade": "São Paulo",
-      "dataCadastro": "2024-01-01"
+      "telefone": "(48) 99999-9999",
+      "cidade": "Criciúma",
+      "id": "1"
     },
     {
       "id": "2",
