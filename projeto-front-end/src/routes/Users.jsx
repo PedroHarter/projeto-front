@@ -3,16 +3,13 @@ import api from '../services/api';
 import AddUsers from '../components/AddUsers';
 import EditUsers from '../components/EditUsers';
 
-// Componente de Gerenciamento de Usuários - Versão simplificada
 export default function Users() {
-  // Estados para gerenciar os dados
-  const [users, setUsers] = useState([]); // Lista de usuários
-  const [loading, setLoading] = useState(true); // Se está carregando
-  const [showForm, setShowForm] = useState(false); // Se deve mostrar o formulário
-  const [editingUser, setEditingUser] = useState(null); // Usuário sendo editado
-  const [message, setMessage] = useState(''); // Mensagem de sucesso/erro
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [message, setMessage] = useState('');
 
-  // Estados do formulário
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,12 +19,10 @@ export default function Users() {
     cidade: ''
   });
 
-  // Carrega os usuários quando o componente é montado
   useEffect(() => {
     loadUsers();
   }, []);
 
-  // Função para carregar todos os usuários
   const loadUsers = async () => {
     try {
       const response = await api.get('/users');
@@ -39,29 +34,24 @@ export default function Users() {
     }
   };
 
-  // Função para mostrar mensagem temporária
   const showMessage = (text) => {
     setMessage(text);
     setTimeout(() => setMessage(''), 3000);
   };
 
-  // Função para salvar usuário (criar ou editar)
   const saveUser = async (e) => {
     e.preventDefault();
     
     try {
       if (editingUser) {
-        // Se está editando, atualiza o usuário existente
         await api.put(`/users/${editingUser.id}`, formData);
         showMessage('Usuário atualizado com sucesso!');
       } else {
-        // Se é novo, cria um novo usuário
         const { id, ...userData } = formData;
         await api.post('/users', userData);
         showMessage('Usuário criado com sucesso!');
       }
       
-      // Fecha o formulário e recarrega a lista
       setShowForm(false);
       setEditingUser(null);
       clearForm();
@@ -71,7 +61,6 @@ export default function Users() {
     }
   };
 
-  // Função para editar um usuário
   const editUser = (user) => {
     setEditingUser(user);
     setFormData({
@@ -86,7 +75,6 @@ export default function Users() {
     setShowForm(true);
   };
 
-  // Função para excluir um usuário
   const deleteUser = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este usuário?')) {
       try {
@@ -99,7 +87,6 @@ export default function Users() {
     }
   };
 
-  // Função para limpar o formulário
   const clearForm = () => {
     setFormData({
       name: '',
@@ -111,14 +98,12 @@ export default function Users() {
     });
   };
 
-  // Função para abrir formulário de novo usuário
   const openNewUserForm = () => {
     setEditingUser(null);
     clearForm();
     setShowForm(true);
   };
 
-  // Mostra tela de carregamento
   if (loading) {
     return (
       <div className="container">
@@ -132,7 +117,6 @@ export default function Users() {
   return (
     <div className="container">
       <div className="card">
-        {/* Cabeçalho da página */}
         <div className="card-header">
           <h1 className="card-title">👥 Gerenciar Usuários</h1>
           <button onClick={openNewUserForm} className="btn btn-success">
@@ -140,14 +124,12 @@ export default function Users() {
           </button>
         </div>
 
-        {/* Mensagem de sucesso/erro */}
         {message && (
           <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
             {message}
           </div>
         )}
 
-        {/* Formulário de Usuário */}
         {showForm && (
           editingUser ? (
             <EditUsers
@@ -166,7 +148,6 @@ export default function Users() {
           )
         )}
 
-        {/* Tabela de usuários */}
         <div className="table-responsive">
           <table className="table">
             <thead>

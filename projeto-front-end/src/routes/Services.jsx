@@ -3,16 +3,13 @@ import api from '../services/api';
 import AddService from '../components/addService';
 import EditService from '../components/EditService';
 
-// Componente de Gerenciamento de Serviços - Versão simplificada
 export default function Services() {
-  // Estados para gerenciar os dados
-  const [services, setServices] = useState([]); // Lista de serviços
-  const [loading, setLoading] = useState(true); // Se está carregando
-  const [showForm, setShowForm] = useState(false); // Se deve mostrar o formulário
-  const [editingService, setEditingService] = useState(null); // Serviço sendo editado
-  const [message, setMessage] = useState(''); // Mensagem de sucesso/erro
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingService, setEditingService] = useState(null);
+  const [message, setMessage] = useState('');
 
-  // Estados do formulário
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,12 +20,10 @@ export default function Services() {
     profissional: ''
   });
 
-  // Carrega os serviços quando o componente é montado
   useEffect(() => {
     loadServices();
   }, []);
 
-  // Função para carregar todos os serviços
   const loadServices = async () => {
     try {
       const response = await api.get('/services');
@@ -40,35 +35,29 @@ export default function Services() {
     }
   };
 
-  // Função para mostrar mensagem temporária
   const showMessage = (text) => {
     setMessage(text);
     setTimeout(() => setMessage(''), 3000);
   };
 
-  // Função para salvar serviço (criar ou editar)
   const saveService = async (e) => {
     e.preventDefault();
     
     try {
-      // Prepara os dados do serviço
       const serviceData = {
         ...formData,
-        price: parseFloat(formData.price), // Converte para número
+        price: parseFloat(formData.price),
         dataCriacao: editingService ? editingService.dataCriacao : new Date().toISOString().split('T')[0]
       };
 
       if (editingService) {
-        // Se está editando, atualiza o serviço existente
         await api.put(`/services/${editingService.id}`, serviceData);
         showMessage('Serviço atualizado com sucesso!');
       } else {
-        // Se é novo, cria um novo serviço
         await api.post('/services', serviceData);
         showMessage('Serviço criado com sucesso!');
       }
       
-      // Fecha o formulário e recarrega a lista
       setShowForm(false);
       setEditingService(null);
       clearForm();
@@ -78,13 +67,12 @@ export default function Services() {
     }
   };
 
-  // Função para editar um serviço
   const editService = (service) => {
     setEditingService(service);
     setFormData({
       title: service.title,
       description: service.description,
-      price: service.price.toString(), // Converte para string para o input
+      price: service.price.toString(),
       duration: service.duration,
       category: service.category,
       status: service.status,
@@ -93,7 +81,6 @@ export default function Services() {
     setShowForm(true);
   };
 
-  // Função para excluir um serviço
   const deleteService = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este serviço?')) {
       try {
@@ -106,7 +93,6 @@ export default function Services() {
     }
   };
 
-  // Função para limpar o formulário
   const clearForm = () => {
     setFormData({
       title: '',
@@ -119,14 +105,12 @@ export default function Services() {
     });
   };
 
-  // Função para abrir formulário de novo serviço
   const openNewServiceForm = () => {
     setEditingService(null);
     clearForm();
     setShowForm(true);
   };
 
-  // Função para formatar preço em reais
   const formatPrice = (price) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -134,7 +118,6 @@ export default function Services() {
     }).format(price);
   };
 
-  // Mostra tela de carregamento
   if (loading) {
     return (
       <div className="container">
@@ -148,7 +131,6 @@ export default function Services() {
   return (
     <div className="container">
       <div className="card">
-        {/* Cabeçalho da página */}
         <div className="card-header">
           <h1 className="card-title">🛠️ Gerenciar Serviços</h1>
           <button onClick={openNewServiceForm} className="btn btn-success">
@@ -156,14 +138,12 @@ export default function Services() {
           </button>
         </div>
 
-        {/* Mensagem de sucesso/erro */}
         {message && (
           <div className={`alert ${message.includes('sucesso') ? 'alert-success' : 'alert-danger'}`}>
             {message}
           </div>
         )}
 
-        {/* Formulário de Serviço */}
         {showForm && (
           editingService ? (
             <EditService
@@ -182,7 +162,6 @@ export default function Services() {
           )
         )}
 
-        {/* Tabela de serviços */}
         <div className="table-responsive">
           <table className="table">
             <thead>

@@ -8,13 +8,11 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
         <button 
           className="close" 
           onClick={onCancel}
-          style={{ fontSize: '2rem', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          &times;
+          style={{ fontSize: '2rem', background: 'none', border: 'none', cursor: 'pointer' }}>
         </button>
       </div>
       <form onSubmit={onSubmit}>
-        {/* Campo Título */}
+
         <div className="form-group">
           <label>Título *</label>
           <input
@@ -25,7 +23,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             required
           />
         </div>
-        {/* Campo Descrição */}
+
         <div className="form-group">
           <label>Descrição *</label>
           <textarea
@@ -36,7 +34,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             required
           />
         </div>
-        {/* Campo Preço */}
+
         <div className="form-group">
           <label>Preço *</label>
           <input
@@ -48,7 +46,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             required
           />
         </div>
-        {/* Campo Duração */}
+
         <div className="form-group">
           <label>Duração *</label>
           <input
@@ -60,7 +58,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             required
           />
         </div>
-        {/* Campo Categoria */}
+
         <div className="form-group">
           <label>Categoria *</label>
           <input
@@ -71,7 +69,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             required
           />
         </div>
-        {/* Campo Status */}
+
         <div className="form-group">
           <label>Status</label>
           <select
@@ -83,7 +81,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             <option value="inativo">Inativo</option>
           </select>
         </div>
-        {/* Campo Profissional */}
+
         <div className="form-group">
           <label>Profissional</label>
           <input
@@ -93,7 +91,7 @@ export default function EditService({ formData, onChange, onSubmit, onCancel }) 
             onChange={e => onChange({ ...formData, profissional: e.target.value })}
           />
         </div>
-        {/* Botões do formulário */}
+    
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
           <button 
             type="button" 

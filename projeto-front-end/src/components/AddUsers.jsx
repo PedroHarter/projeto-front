@@ -1,5 +1,5 @@
 import React from 'react';
-
+/*Função para adicionar um novo usuário*/ 
 export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
   return (
     <div className="user-form" style={{ marginBottom: '30px', border: '1px solid #eee', borderRadius: '8px', padding: '20px', background: '#fafbfc' }}>
@@ -8,13 +8,11 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
         <button 
           className="close" 
           onClick={onCancel}
-          style={{ fontSize: '2rem', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          &times;
+          style={{ fontSize: '2rem', background: 'none', border: 'none', cursor: 'pointer' }}>
         </button>
       </div>
       <form onSubmit={onSubmit}>
-        {/* Campo Nome */}
+
         <div className="form-group">
           <label>Nome *</label>
           <input
@@ -25,7 +23,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             required
           />
         </div>
-        {/* Campo E-mail */}
+
         <div className="form-group">
           <label>E-mail *</label>
           <input
@@ -36,7 +34,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             required
           />
         </div>
-        {/* Campo Senha */}
+
         <div className="form-group">
           <label>Senha *</label>
           <input
@@ -47,7 +45,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             required
           />
         </div>
-        {/* Campo Função */}
+
         <div className="form-group">
           <label>Função</label>
           <select
@@ -59,7 +57,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             <option value="admin">Administrador</option>
           </select>
         </div>
-        {/* Campo Telefone */}
+
         <div className="form-group">
           <label>Telefone</label>
           <input
@@ -69,7 +67,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             onChange={e => onChange({ ...formData, telefone: e.target.value })}
           />
         </div>
-        {/* Campo Cidade */}
+
         <div className="form-group">
           <label>Cidade</label>
           <input
@@ -79,7 +77,7 @@ export default function AddUsers({ formData, onChange, onSubmit, onCancel }) {
             onChange={e => onChange({ ...formData, cidade: e.target.value })}
           />
         </div>
-        {/* Botões do formulário */}
+
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
           <button 
             type="button" 
