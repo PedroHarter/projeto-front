@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import Services from './routes/Services';
 import Users from './routes/Users';
 import Login from './routes/login';
@@ -12,15 +12,18 @@ const RouterWrapper = () => {
 
   const router = createBrowserRouter([
     {
+      path: '/',
+      element: <Navigate to="/login" replace />
+    },
+    {
       path: '/login',
       element: <Login />,
     },
     {
-      path: '/',
+      path: '/dashboard',
       element: <AppLayout />,
       children: [
         { index: true, element: <Dashboard /> },
-        { path: 'dashboard', element: <Dashboard /> },
         { path: 'services', element: <Services /> },
         { path: 'users', element: <Users /> },
       ],

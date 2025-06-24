@@ -34,8 +34,8 @@ export default function Navbar() {
           
           <li>
             <Link 
-              to="/services" 
-              className={location.pathname === '/services' ? 'active' : ''}
+              to="/dashboard/services" 
+              className={location.pathname === '/dashboard/services' ? 'active' : ''}
             >
               Serviços
             </Link>
@@ -43,8 +43,8 @@ export default function Navbar() {
           
           <li>
             <Link 
-              to="/users" 
-              className={location.pathname === '/users' ? 'active' : ''}
+              to="/dashboard/users" 
+              className={location.pathname === '/dashboard/users' ? 'active' : ''}
             >
               Usuários
             </Link>
